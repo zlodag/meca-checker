@@ -7,38 +7,49 @@ beforeEach(function(){
 });
 
 describe('Rostered hours', function(){
+    //                                 M, Tu,W, Th,F,Sa,Su, M, Tu,W, Th,F,Sa,Su, M, Tu,W, Th,F, Sa,Su
+    const compliantRoster          = [ 8, 8, 8, 8, 8,16,16, 8, 8, 8, 8, 8, 0, 0, 8, 8, 8, 8, 8, 16,16];
+    const tooManyHoursPerWeek      = [ 8, 8, 8, 8, 8, 0, 0, 8, 8, 8, 8, 8, 0, 0, 8, 8, 9, 8, 8, 16,16];
+    const tooManyHoursPerFortnight = [ 8, 8, 8, 8, 8, 0, 0, 8, 8, 8, 8, 8, 0, 0, 9, 16,16,16,16,16,16];
+    const tooManyWeekends1         = [ 8, 8, 8, 8, 8, 0, 1, 8, 8, 8, 8, 8, 1, 0, 8, 8, 8, 8, 8, 0, 0 ];
+    const tooManyWeekends2         = [ 8, 8, 8, 8, 8, 0, 0, 8, 8, 8, 8, 8, 1, 0, 8, 8, 8, 8, 8, 0, 1 ];
+
     it('cannot exceed 72 hours per week: custom matcher', function(){
-        expect([8,8,8,8,8,16,16]).toComplyWithLimitOnHoursPerWeek();
-        expect([8,8,8,8,8,16,17]).not.toComplyWithLimitOnHoursPerWeek();
-        expect([8,8,8,8,8,16,16,8,8,8,8,8]).toComplyWithLimitOnHoursPerWeek();
-        expect([8,8,8,8,8,16,16,8,8,8,8,9]).not.toComplyWithLimitOnHoursPerWeek();
+        expect(compliantRoster).toComplyWithLimitOnHoursPerWeek();
+        expect(tooManyHoursPerWeek).not.toComplyWithLimitOnHoursPerWeek();
+        expect(tooManyHoursPerFortnight).not.toComplyWithLimitOnHoursPerWeek();
+        expect(tooManyWeekends1).toComplyWithLimitOnHoursPerWeek();
+        expect(tooManyWeekends2).toComplyWithLimitOnHoursPerWeek();
     });
     it('cannot exceed 144 hours per fortnight', function(){
-        expect([8,8,8,8,8,16,16,8,8,8,8,8,16,16]).toComplyWithLimitOnHoursPerFortnight();
-        expect([8,8,8,8,8,16,16,8,8,8,8,8,16,17]).not.toComplyWithLimitOnHoursPerFortnight();
+        expect(compliantRoster).toComplyWithLimitOnHoursPerFortnight();
+        expect(tooManyHoursPerWeek).toComplyWithLimitOnHoursPerFortnight();
+        expect(tooManyHoursPerFortnight).not.toComplyWithLimitOnHoursPerFortnight();
+        expect(tooManyWeekends1).toComplyWithLimitOnHoursPerFortnight();
+        expect(tooManyWeekends2).toComplyWithLimitOnHoursPerFortnight();
     });
     it('cannot work more than 1 in 2 weekends', function(){
-        expect([8,8,8,8,8,16,16,8,8,8,8,8,0,0,8,8,8,8,8,16,16]).toComplyWithLimitOnWorkedWeekends();
-        expect([8,8,8,8,8,16,16,8,8,8,8,8,0,1,8,8,8,8,8,0,0]).not.toComplyWithLimitOnWorkedWeekends();
-        expect([8,8,8,8,16,16,8,8,8,8,8,0,0,8,8,8,8,8,16,16,8]).not.toComplyWithLimitOnWorkedWeekends();
-        expect([16,8,8,8,8,8,16,16,8,8,8,8,8,0,0,8,8,8,8,8,16]).not.toComplyWithLimitOnWorkedWeekends();
-        expect([8,8,8,8,8,0,0,8,8,8,8,8,16,16,8,8,8,8,8,0,0]).toComplyWithLimitOnWorkedWeekends();
-        expect([8,8,8,8,8,0,0,8,8,8,8,8,16,16,8,8,8,8,8,1,0]).not.toComplyWithLimitOnWorkedWeekends();
-        expect([8,8,8,8,8,0,1,8,8,8,8,8,16,16,8,8,8,8,8,0,0]).not.toComplyWithLimitOnWorkedWeekends();
+        expect(compliantRoster).toComplyWithLimitOnWorkedWeekends();
+        expect(tooManyHoursPerWeek).toComplyWithLimitOnWorkedWeekends();
+        expect(tooManyHoursPerFortnight).toComplyWithLimitOnWorkedWeekends();
+        expect(tooManyWeekends1).not.toComplyWithLimitOnWorkedWeekends();
+        expect(tooManyWeekends2).not.toComplyWithLimitOnWorkedWeekends();
     });
 });
 
 describe('Shift durations and rest periods', function(){
+    const compliantRoster = [[8,16],[8,16],[8,16],[16,8],[8,16],[0,24],[0,24]];
+    const tooMuchWork =     [[8,16],[8,16],[8,16],[17,8],[8,16],[0,24],[0,24]];
+    const notEnoughRest =   [[8,16],[8,16],[8,16],[16,7],[8,16],[0,24],[0,24]];
     it('cannot exceed 16 hours per day', function(){
-        expect([[8,16],[8,16],[8,16],[16,8],[8,16],[0,24],[0,24]]).toComplyWithMaximumWorkHours();
-        expect([[8,16],[8,16],[8,16],[17,8],[8,16],[0,24],[0,24]]).not.toComplyWithMaximumWorkHours();
-        expect([[8,16],[8,16],[8,16],[16,7],[8,16],[0,24],[0,24]]).toComplyWithMaximumWorkHours();
-
+        expect(compliantRoster).toComplyWithMaximumWorkHours();
+        expect(tooMuchWork).not.toComplyWithMaximumWorkHours();
+        expect(notEnoughRest).toComplyWithMaximumWorkHours();
     });
     it('must have at least 8 hours between rostered shifts', function(){
-        expect([[8,16],[8,16],[8,16],[16,8],[8,16],[0,24],[0,24]]).toComplyWithMinimumRestHours();
-        expect([[8,16],[8,16],[8,16],[17,8],[8,16],[0,24],[0,24]]).toComplyWithMinimumRestHours();
-        expect([[8,16],[8,16],[8,16],[16,7],[8,16],[0,24],[0,24]]).not.toComplyWithMinimumRestHours();
+        expect(compliantRoster).toComplyWithMinimumRestHours();
+        expect(tooMuchWork).toComplyWithMinimumRestHours();
+        expect(notEnoughRest).not.toComplyWithMinimumRestHours();
     });
 });
 
