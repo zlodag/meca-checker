@@ -1,58 +1,34 @@
-
-<div class="card text-center">
-    <div class="card-header">
-        Shift x
+<div class="row align-items-center text-center">
+    <div class="col-sm-12 col-md-4">
+        <ngb-datepicker
+            [(ngModel)]="date"
+            (ngModelChange)="updateTimestamps()"
+            required
+            ></ngb-datepicker>
     </div>
-    <div class="card-block">
-        <div class="row align-items-center">
-
-            <div class="col-sm-6">
-                <h4>Start</h4>
-                <app-datetime
-                    [datetime]="start"
-                    (updated)="onStartUpdated($event)"
-                    ></app-datetime>
-            </div>
-
-            <div class="col-sm-6">
-                <h4>End</h4>
-                <app-datetime
-                    [datetime]="end"
-                    (updated)="onEndUpdated($event)"
-                    ></app-datetime>
-            </div>
-<!-- 
-            <div class="col-sm-12 col-md-4 pull-md-4">
-                <span>Shift length: {{ duration | duration }}</span>
-                <ngb-progressbar type="success" [value]="duration" max="86400000"></ngb-progressbar>
-            </div>
- -->
-        </div>
+    <div class="col-sm-6 col-md-4">
+        <h3>Start time</h3>
+        <ngb-timepicker
+            [(ngModel)]="start"
+            required
+            (ngModelChange)="updateTimestamps()"
+            ></ngb-timepicker>
+        <p>{{ startTimestamp | date:'medium' }}</p>
     </div>
-    <div class="card-footer">
-    <app-progress
-        [end]="end"
-        [start]="start"
-        ></app-progress>
-
-        <!-- <span>Shift length: {{ duration | durationToString }}</span>
-        <pre>Start: {{ start | date:'medium' }}</pre>
-        <pre>End: {{ end | date:'medium' }}</pre>
-        <div *ngIf="(start | millisSinceMidnight) < (end | millisSinceMidnight)" class="progress bg-inverse">
-          <div
-            [style.margin-left]="start | millisSinceMidnight | durationToPercentOfDay"
-            [style.width]="duration | durationToPercentOfDay"
-            class="progress-bar bg-success"
-            ></div>
-        </div>
-
-        <div *ngIf="(start | millisSinceMidnight) > (end | millisSinceMidnight)" class="progress bg-success">
-          <div
-            [style.margin-left]="end | millisSinceMidnight | durationToPercentOfDay"
-            [style.width]="duration | durationToPercentOfDay:true"
-            class="progress-bar bg-inverse"
-            ></div>
-
-        </div> -->
+    <div class="col-sm-6 col-md-4">
+        <h3>End time</h3>
+        <ngb-timepicker
+            [(ngModel)]="end"
+            required
+            (ngModelChange)="updateTimestamps()"
+            ></ngb-timepicker>
+        <p>{{ endTimestamp | date:'medium' }}</p>
+    </div>
+    <div class="col-sm-12">
+        <app-progress
+            [start]="start"
+            [end]="end"
+            ></app-progress>
+        <p>{{ (endTimestamp - startTimestamp) | durationToString }}</p>
     </div>
 </div>

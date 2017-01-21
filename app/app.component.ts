@@ -14,8 +14,7 @@ export class AppComponent {
         timepickerConfig: NgbTimepickerConfig,
         datepickerConfig: NgbDatepickerConfig,
     ){
-        timepickerConfig.minuteStep = 5;
-        timepickerConfig.meridian = true;
+        timepickerConfig.minuteStep = 15;
         datepickerConfig.navigation = "arrows";
     }
 }

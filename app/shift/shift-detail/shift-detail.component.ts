@@ -1,51 +1,62 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgbTimeStruct, NgbDateStruct, NgbTimepickerConfig, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from '@angular/core';
+import { NgbTimeStruct, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+
+import { ConfigurationService } from '../../configuration.service';
 
 @Component({
     moduleId: module.id,
     selector: 'app-shift-detail',
     templateUrl: 'shift-detail.component.html',
+    styles: [`
+         /deep/ ngb-timepicker table {
+            margin: auto;
+        }
+    `],
 })
 export class ShiftDetailComponent implements OnInit {
+    start: NgbTimeStruct;
+    end: NgbTimeStruct;
+    date: NgbDateStruct;
+    startTimestamp: Date;
+    endTimestamp: Date;
+    constructor(
+        private config: ConfigurationService,
+    ) { }
     ngOnInit() {
-        this.start = new Date();
-        this.start.setMilliseconds(0);
-        this.start.setSeconds(0);
-        this.start.setMinutes(0);
-        this.start.setHours(8);
-        this.updateEnd();
+        this.start = this.config.shift.start;
+        this.end = this.config.shift.end;
+        this.updateTimestamps();
     }
-    millisPerHour = 60 * 60 * 1000;
-    duration = 8 * this.millisPerHour;
-    start: Date;
-    end: Date;
-    endTimeUpdated: boolean = false;
-    onStartUpdated(start: Date){
-        this.start = new Date(start.getTime());
-        if (!this.endTimeUpdated || !this.updateDuration()){
-            this.updateEnd();
+    updateTimestamps(){
+        if (!this.date) {
+            this.date = this.getDateStruct(new Date());
+        }
+        if (this.start){
+            this.startTimestamp = new Date(this.date.year, this.date.month - 1, this.date.day, this.start.hour, this.start.minute, 0, 0);
+        } else {
+            this.start = this.getTimeStruct(this.startTimestamp);
+        }
+        if (this.end) {
+            this.endTimestamp = new Date(this.date.year, this.date.month - 1, this.date.day, this.end.hour, this.end.minute, 0, 0);
+        } else {
+            this.end = this.getTimeStruct(this.endTimestamp);
+        }
+        while (this.startTimestamp.getTime() >= this.endTimestamp.getTime()){
+            this.endTimestamp.setDate(this.endTimestamp.getDate() + 1);
         }
     }
-    onEndUpdated(end: Date){
-        this.end = new Date(end.getTime());
-        this.endTimeUpdated = true;
-        if (!this.updateDuration()){
-            this.updateStart();
-        }
+    getTimeStruct(date: Date): NgbTimeStruct {
+        return {
+            hour: date.getHours(),
+            minute: date.getMinutes(),
+            second: date.getSeconds()
+        };
     }
-    updateDuration(): boolean {
-        const duration = this.end.getTime() - this.start.getTime();
-        if (duration <= 0 || duration > (24 * this.millisPerHour)) {
-            return false;
-        }
-        this.duration = duration;
-        return true;
-    }
-    updateEnd(){
-        this.end = new Date(this.start.getTime() + this.duration);
-    }
-    updateStart(){
-        this.start = new Date(this.end.getTime() - this.duration);
+    getDateStruct(date: Date): NgbDateStruct {
+        return {
+            year: date.getFullYear(),
+            month: date.getMonth() + 1,
+            day: date.getDate()
+        };
     }
 }
-
