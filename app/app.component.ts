@@ -3,7 +3,7 @@ import { NgbTimepickerConfig, NgbDatepickerConfig } from '@ng-bootstrap/ng-boots
 
 @Component({
   selector: 'my-app',
-  template: `<app-shift></app-shift>`,
+  template: `<app-shift-list></app-shift-list>`,
   providers: [
       NgbTimepickerConfig,
       NgbDatepickerConfig,
@@ -15,6 +15,7 @@ export class AppComponent {
         datepickerConfig: NgbDatepickerConfig,
     ){
         timepickerConfig.minuteStep = 5;
+        timepickerConfig.meridian = true;
         datepickerConfig.navigation = "arrows";
     }
 }

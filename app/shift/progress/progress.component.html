@@ -1,0 +1,20 @@
+<div *ngIf="!workingAtMidnight" class="progress bg-inverse">
+    <div
+        [style.margin-left]="startMillisSinceMidnight | durationToPercentOfDay"
+        [style.width]="duration | durationToPercentOfDay"
+        class="progress-bar bg-success"
+        ></div>
+</div>
+
+<div *ngIf="workingAtMidnight" class="progress bg-success">
+    <div
+        [style.margin-left]="endMillisSinceMidnight | durationToPercentOfDay"
+        [style.width]="duration | durationToPercentOfDay:true"
+        class="progress-bar bg-inverse"
+        ></div>
+</div>
+
+Start: <pre>{{ start | json }}</pre>
+End: <pre>{{ end | json }}</pre>
+Duration: <pre>{{ duration | durationToString }}</pre>
+Working at midnight: {{ workingAtMidnight }}
