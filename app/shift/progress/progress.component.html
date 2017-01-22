@@ -1,15 +1,14 @@
-<div *ngIf="(start | minutesSinceMidnight) < (end | minutesSinceMidnight)" class="progress bg-inverse">
+<div
+    class="progress"
+    [class.bg-success]="workingAtMidnight"
+    [class.bg-inverse]="!workingAtMidnight"
+    >
     <div
-        [style.margin-left]="start | minutesSinceMidnight | minutesToPercentOfDay"
-        [style.width]="(end | minutesSinceMidnight) - (start | minutesSinceMidnight) | minutesToPercentOfDay"
-        class="progress-bar bg-success"
-        ></div>
-</div>
-
-<div *ngIf="(end | minutesSinceMidnight) <= (start | minutesSinceMidnight)" class="progress bg-success">
-    <div
-        [style.margin-left]="end | minutesSinceMidnight | minutesToPercentOfDay"
-        [style.width]="(start | minutesSinceMidnight) - (end | minutesSinceMidnight) | minutesToPercentOfDay"
-        class="progress-bar bg-inverse"
-        ></div>
+        [style.margin-left]="firstWidth"
+        [style.width]="secondWidth"
+        class="progress-bar"
+        [class.bg-success]="!workingAtMidnight"
+        [class.bg-inverse]="workingAtMidnight"
+        >
+    </div>
 </div>

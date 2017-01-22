@@ -1,7 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NgbTimeStruct, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-
-import { ConfigurationService } from '../../configuration.service';
 
 @Component({
     moduleId: module.id,
@@ -13,36 +11,83 @@ import { ConfigurationService } from '../../configuration.service';
         }
     `],
 })
-export class ShiftDetailComponent implements OnInit {
-    start: NgbTimeStruct;
-    end: NgbTimeStruct;
-    date: NgbDateStruct;
-    startTimestamp: Date;
-    endTimestamp: Date;
-    constructor(
-        private config: ConfigurationService,
-    ) { }
-    ngOnInit() {
-        this.start = this.config.shift.start;
-        this.end = this.config.shift.end;
-        this.updateTimestamps();
+export class ShiftDetailComponent implements OnChanges {
+
+    @Input() start: Date;
+    @Output() startChange = new EventEmitter<Date>();
+    @Input() end: Date;
+    @Output() endChange = new EventEmitter<Date>();
+
+    startTime: NgbTimeStruct;
+    endTime: NgbTimeStruct;
+    startDate: NgbDateStruct;
+
+    ngOnChanges(changes: SimpleChanges) {
+        const startChanged = changes['start'];
+        if (startChanged){
+            this.startDate = this.getDateStruct(startChanged.currentValue);
+            this.startTime = this.getTimeStruct(startChanged.currentValue);
+        }
+        const endChanged = changes['end'];
+        if (endChanged){
+            this.endTime = this.getTimeStruct(endChanged.currentValue);
+        }
     }
-    updateTimestamps(){
-        if (!this.date) {
-            this.date = this.getDateStruct(new Date());
+    emitNewStart(startDate: NgbDateStruct, startTime: NgbTimeStruct){
+        const start = new Date(
+            startDate.year,
+            startDate.month - 1,
+            startDate.day,
+            startTime.hour,
+            startTime.minute
+        );
+        this.startChange.next(start);
+        const end = new Date(
+            startDate.year,
+            startDate.month - 1,
+            startDate.day,
+            this.endTime.hour,
+            this.endTime.minute
+        );
+        while (start >= end){
+            end.setDate(end.getDate() + 1);
         }
-        if (this.start){
-            this.startTimestamp = new Date(this.date.year, this.date.month - 1, this.date.day, this.start.hour, this.start.minute, 0, 0);
+        if (end.getTime() !== this.end.getTime()){
+            this.endChange.next(end);
+        }
+    }
+    emitNewEnd(endTime: NgbTimeStruct){
+        const end = new Date(
+            this.start.getFullYear(),
+            this.start.getMonth(),
+            this.start.getDate(),
+            endTime.hour,
+            endTime.minute
+        );
+        while (this.start >= end){
+            end.setDate(end.getDate() + 1);
+        }
+        this.endChange.next(end);
+    }
+    startDateChanged(startDate: NgbDateStruct){
+        if (startDate) {
+            this.emitNewStart(startDate, this.startTime);
         } else {
-            this.start = this.getTimeStruct(this.startTimestamp);
+            this.startDate = this.getDateStruct(this.start);
         }
-        if (this.end) {
-            this.endTimestamp = new Date(this.date.year, this.date.month - 1, this.date.day, this.end.hour, this.end.minute, 0, 0);
+    }
+    startTimeChanged(startTime: NgbTimeStruct){
+        if (startTime) {
+            this.emitNewStart(this.startDate, startTime);
         } else {
-            this.end = this.getTimeStruct(this.endTimestamp);
+            this.startTime = this.getTimeStruct(this.start);
         }
-        while (this.startTimestamp.getTime() >= this.endTimestamp.getTime()){
-            this.endTimestamp.setDate(this.endTimestamp.getDate() + 1);
+    }
+    endTimeChanged(endTime: NgbTimeStruct){
+        if (endTime) {
+            this.emitNewEnd(endTime);
+        } else {
+            this.endTime = this.getTimeStruct(this.end);
         }
     }
     getTimeStruct(date: Date): NgbTimeStruct {

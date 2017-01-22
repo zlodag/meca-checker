@@ -1,7 +1,28 @@
-
-<div class="container">
-
-            <app-shift-detail></app-shift-detail>
-
-
-</div>
+<ngb-accordion
+    class="text-center"
+    [closeOthers]="true"
+    >
+    <ngb-panel 
+        *ngFor="let shift of shifts">
+        <template ngbPanelTitle>
+            <p>
+                {{ shift.start | date:'fullDate' }}
+            </p>
+            <app-progress
+                [start]="shift.start"
+                [end]="shift.end"
+                ></app-progress>
+            <p><small class="text-muted">
+                {{ shift.start | date:'HH:mm' }}&ndash;{{ shift.end | date:'HH:mm' }}
+                    ({{ (shift.end - shift.start) | durationToString }})
+            </small></p>
+        </template>
+        <template ngbPanelContent>
+            <app-shift-detail
+                [(start)]="shift.start"
+                [(end)]="shift.end"
+                ></app-shift-detail>
+        </template>
+    </ngb-panel>
+</ngb-accordion>
+<button type="button" class="btn btn-success btn-block" (click)="appendShift()">Add</button>

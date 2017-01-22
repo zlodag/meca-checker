@@ -3,14 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { DurationToStringPipe } from './util/duration.pipe';
 import { ConfigurationService } from './configuration.service';
 import { AppComponent }  from './app.component';
 import { ShiftListComponent } from './shift/shift-list/shift-list.component';
 import { ShiftDetailComponent }  from './shift/shift-detail/shift-detail.component';
-import { DatetimeComponent }  from './shift/datetime/datetime.component';
 import { ProgressComponent }  from './shift/progress/progress.component';
-import { MinutesSinceMidnightPipe,
-    MinutesToPercentOfDayPipe, DurationToStringPipe } from './util/duration.pipe';
 
 @NgModule({
     imports: [
@@ -19,14 +17,11 @@ import { MinutesSinceMidnightPipe,
         NgbModule.forRoot(),
     ],
     declarations: [
+        DurationToStringPipe,
         AppComponent,
         ShiftListComponent,
         ShiftDetailComponent,
-        DatetimeComponent,
         ProgressComponent,
-        MinutesSinceMidnightPipe,
-        MinutesToPercentOfDayPipe,
-        DurationToStringPipe,
     ],
     bootstrap: [
         AppComponent,

@@ -1,34 +1,25 @@
 <div class="row align-items-center text-center">
     <div class="col-sm-12 col-md-4">
         <ngb-datepicker
-            [(ngModel)]="date"
-            (ngModelChange)="updateTimestamps()"
+            [ngModel]="startDate"
+            (ngModelChange)="startDateChanged($event)"
             required
             ></ngb-datepicker>
     </div>
     <div class="col-sm-6 col-md-4">
         <h3>Start time</h3>
         <ngb-timepicker
-            [(ngModel)]="start"
+            [ngModel]="startTime"
+            (ngModelChange)="startTimeChanged($event)"
             required
-            (ngModelChange)="updateTimestamps()"
             ></ngb-timepicker>
-        <p>{{ startTimestamp | date:'medium' }}</p>
     </div>
     <div class="col-sm-6 col-md-4">
         <h3>End time</h3>
         <ngb-timepicker
-            [(ngModel)]="end"
+            [ngModel]="endTime"
+            (ngModelChange)="endTimeChanged($event)"
             required
-            (ngModelChange)="updateTimestamps()"
             ></ngb-timepicker>
-        <p>{{ endTimestamp | date:'medium' }}</p>
-    </div>
-    <div class="col-sm-12">
-        <app-progress
-            [start]="start"
-            [end]="end"
-            ></app-progress>
-        <p>{{ (endTimestamp - startTimestamp) | durationToString }}</p>
     </div>
 </div>

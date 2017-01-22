@@ -3,7 +3,7 @@ import { NgbTimepickerConfig, NgbDatepickerConfig } from '@ng-bootstrap/ng-boots
 
 @Component({
   selector: 'my-app',
-  template: `<app-shift-list></app-shift-list>`,
+  template: `<div class="container"><app-shift-list></app-shift-list></div>`,
   providers: [
       NgbTimepickerConfig,
       NgbDatepickerConfig,
