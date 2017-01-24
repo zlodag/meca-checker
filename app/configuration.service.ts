@@ -17,5 +17,14 @@ export class ConfigurationService {
             minute: 0,
             second: 0,
         }
-    }
+    };
+    daysWorked : boolean[] = [
+        false, // Sunday
+        true, // Monday
+        true, // Tuesday
+        true, // Wednesday
+        true, // Thursday
+        true, // Friday
+        false, // Saturday
+    ];
 }

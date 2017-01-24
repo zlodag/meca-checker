@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { DurationToStringPipe } from './util/duration.pipe';
+import { SortedShiftsPipe } from './util/sorted-shifts.pipe';
+import { CompliancePipe } from './util/compliance.pipe';
 import { ConfigurationService } from './configuration.service';
 import { AppComponent }  from './app.component';
 import { ShiftListComponent } from './shift/shift-list/shift-list.component';
@@ -18,6 +20,8 @@ import { ProgressComponent }  from './shift/progress/progress.component';
     ],
     declarations: [
         DurationToStringPipe,
+        SortedShiftsPipe,
+        CompliancePipe,
         AppComponent,
         ShiftListComponent,
         ShiftDetailComponent,

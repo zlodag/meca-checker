@@ -17,6 +17,8 @@ export class ShiftDetailComponent implements OnChanges {
     @Output() startChange = new EventEmitter<Date>();
     @Input() end: Date;
     @Output() endChange = new EventEmitter<Date>();
+    @Input() startOverlap: boolean;
+    @Input() endOverlap: boolean;
 
     startTime: NgbTimeStruct;
     endTime: NgbTimeStruct;
@@ -27,10 +29,12 @@ export class ShiftDetailComponent implements OnChanges {
         if (startChanged){
             this.startDate = this.getDateStruct(startChanged.currentValue);
             this.startTime = this.getTimeStruct(startChanged.currentValue);
+            // this.startOverlap = !!this.previousEnd && (startChanged.currentValue.getTime() < this.previousEnd.getTime());
         }
         const endChanged = changes['end'];
         if (endChanged){
             this.endTime = this.getTimeStruct(endChanged.currentValue);
+            // this.endOverlap = !!this.nextStart && (endChanged.currentValue.getTime() > this.nextStart.getTime());
         }
     }
     emitNewStart(startDate: NgbDateStruct, startTime: NgbTimeStruct){

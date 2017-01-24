@@ -1,9 +1,12 @@
+<h1>Shifts</h1>
 <ngb-accordion
     class="text-center"
     [closeOthers]="true"
     >
     <ngb-panel 
-        *ngFor="let shift of shifts">
+        *ngFor="let shift of shifts | sortedShifts; let index = index; let first = first; let last = last"
+        [type]="((!first && shift.start < shifts[index - 1].end) || (!last && shift.end > shifts[index + 1].start)) ? 'warning' : null"
+        >
         <template ngbPanelTitle>
             <p>
                 {{ shift.start | date:'fullDate' }}
@@ -19,6 +22,8 @@
         </template>
         <template ngbPanelContent>
             <app-shift-detail
+                [startOverlap]="!first && shift.start < shifts[index - 1].end"
+                [endOverlap]="!last && shift.end > shifts[index + 1].start"
                 [(start)]="shift.start"
                 [(end)]="shift.end"
                 ></app-shift-detail>
@@ -26,3 +31,5 @@
     </ngb-panel>
 </ngb-accordion>
 <button type="button" class="btn btn-success btn-block" (click)="appendShift()">Add</button>
+
+Compliance: {{ (shifts | compliance)?.maxDurationWorked | durationToString}}

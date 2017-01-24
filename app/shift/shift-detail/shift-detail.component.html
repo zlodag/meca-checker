@@ -1,3 +1,6 @@
+<div *ngIf="startOverlap" class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> Overlaps with end of previous shift
+</div>
 <div class="row align-items-center text-center">
     <div class="col-sm-12 col-md-4">
         <ngb-datepicker
@@ -22,4 +25,7 @@
             required
             ></ngb-timepicker>
     </div>
+</div>
+<div *ngIf="endOverlap" class="alert alert-warning" role="alert">
+  <strong>Warning!</strong> Overlaps with start of next shift
 </div>
